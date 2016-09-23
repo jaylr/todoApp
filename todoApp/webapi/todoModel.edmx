@@ -1,0 +1,236 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="TodolistModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="listItem">
+          <Key>
+            <PropertyRef Name="itemid" />
+          </Key>
+          <Property Name="itemid" Type="int" Nullable="false" />
+          <Property Name="listid" Type="int" Nullable="false" />
+          <Property Name="updatedon" Type="datetime" />
+        </EntityType>
+        <EntityType Name="listTable">
+          <Key>
+            <PropertyRef Name="listid" />
+          </Key>
+          <Property Name="listid" Type="int" Nullable="false" />
+          <Property Name="listtitle" Type="varchar" MaxLength="50" />
+          <Property Name="completed" Type="bit" Nullable="false" />
+          <Property Name="updatedon" Type="datetime" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'Todolist.dbo.TagListConnection' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="TagListConnection">
+          <Key>
+            <PropertyRef Name="listid" />
+            <PropertyRef Name="tagid" />
+          </Key>
+          <Property Name="listid" Type="int" Nullable="false" />
+          <Property Name="tagid" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tagsTable">
+          <Key>
+            <PropertyRef Name="tagid" />
+          </Key>
+          <Property Name="tagid" Type="int" Nullable="false" />
+          <Property Name="tagname" Type="varchar" MaxLength="50" />
+          <Property Name="updatedon" Type="datetime" />
+        </EntityType>
+        <Association Name="FK__listItem__listid__1B0907CE">
+          <End Role="listTable" Type="Self.listTable" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="listItem" Type="Self.listItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="listTable">
+              <PropertyRef Name="listid" />
+            </Principal>
+            <Dependent Role="listItem">
+              <PropertyRef Name="listid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__TagListCo__listi__1FCDBCEB">
+          <End Role="listTable" Type="Self.listTable" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="TagListConnection" Type="Self.TagListConnection" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="listTable">
+              <PropertyRef Name="listid" />
+            </Principal>
+            <Dependent Role="TagListConnection">
+              <PropertyRef Name="listid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__TagListCo__tagid__20C1E124">
+          <End Role="tagsTable" Type="Self.tagsTable" Multiplicity="1" />
+          <End Role="TagListConnection" Type="Self.TagListConnection" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tagsTable">
+              <PropertyRef Name="tagid" />
+            </Principal>
+            <Dependent Role="TagListConnection">
+              <PropertyRef Name="tagid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="TodolistModelStoreContainer">
+          <EntitySet Name="listItem" EntityType="Self.listItem" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="listTable" EntityType="Self.listTable" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tagsTable" EntityType="Self.tagsTable" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TagListConnection" EntityType="Self.TagListConnection" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [TagListConnection].[listid] AS [listid], 
+    [TagListConnection].[tagid] AS [tagid]
+    FROM [dbo].[TagListConnection] AS [TagListConnection]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK__listItem__listid__1B0907CE" Association="Self.FK__listItem__listid__1B0907CE">
+            <End Role="listTable" EntitySet="listTable" />
+            <End Role="listItem" EntitySet="listItem" />
+          </AssociationSet>
+          <AssociationSet Name="FK__TagListCo__listi__1FCDBCEB" Association="Self.FK__TagListCo__listi__1FCDBCEB">
+            <End Role="listTable" EntitySet="listTable" />
+            <End Role="TagListConnection" EntitySet="TagListConnection" />
+          </AssociationSet>
+          <AssociationSet Name="FK__TagListCo__tagid__20C1E124" Association="Self.FK__TagListCo__tagid__20C1E124">
+            <End Role="tagsTable" EntitySet="tagsTable" />
+            <End Role="TagListConnection" EntitySet="TagListConnection" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="TodolistModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="listItem">
+          <Key>
+            <PropertyRef Name="itemid" />
+          </Key>
+          <Property Name="itemid" Type="Int32" Nullable="false" />
+          <Property Name="listid" Type="Int32" Nullable="false" />
+          <Property Name="updatedon" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="listTable" Relationship="Self.FK__listItem__listid__1B0907CE" FromRole="listItem" ToRole="listTable" />
+        </EntityType>
+        <EntityType Name="listTable">
+          <Key>
+            <PropertyRef Name="listid" />
+          </Key>
+          <Property Name="listid" Type="Int32" Nullable="false" />
+          <Property Name="listtitle" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="completed" Type="Boolean" Nullable="false" />
+          <Property Name="updatedon" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="listItems" Relationship="Self.FK__listItem__listid__1B0907CE" FromRole="listTable" ToRole="listItem" />
+          <NavigationProperty Name="tagsTables" Relationship="Self.TagListConnection" FromRole="listTable" ToRole="tagsTable" />
+        </EntityType>
+        <EntityType Name="tagsTable">
+          <Key>
+            <PropertyRef Name="tagid" />
+          </Key>
+          <Property Name="tagid" Type="Int32" Nullable="false" />
+          <Property Name="tagname" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="updatedon" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="listTables" Relationship="Self.TagListConnection" FromRole="tagsTable" ToRole="listTable" />
+        </EntityType>
+        <Association Name="FK__listItem__listid__1B0907CE">
+          <End Role="listTable" Type="Self.listTable" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="listItem" Type="Self.listItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="listTable">
+              <PropertyRef Name="listid" />
+            </Principal>
+            <Dependent Role="listItem">
+              <PropertyRef Name="listid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="TagListConnection">
+          <End Role="listTable" Type="Self.listTable" Multiplicity="*" />
+          <End Role="tagsTable" Type="Self.tagsTable" Multiplicity="*" />
+        </Association>
+        <EntityContainer Name="TodolistEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="listItems" EntityType="Self.listItem" />
+          <EntitySet Name="listTables" EntityType="Self.listTable" />
+          <EntitySet Name="tagsTables" EntityType="Self.tagsTable" />
+          <AssociationSet Name="FK__listItem__listid__1B0907CE" Association="Self.FK__listItem__listid__1B0907CE">
+            <End Role="listTable" EntitySet="listTables" />
+            <End Role="listItem" EntitySet="listItems" />
+          </AssociationSet>
+          <AssociationSet Name="TagListConnection" Association="Self.TagListConnection">
+            <End Role="listTable" EntitySet="listTables" />
+            <End Role="tagsTable" EntitySet="tagsTables" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="TodolistModelStoreContainer" CdmEntityContainer="TodolistEntities">
+          <EntitySetMapping Name="listItems">
+            <EntityTypeMapping TypeName="TodolistModel.listItem">
+              <MappingFragment StoreEntitySet="listItem">
+                <ScalarProperty Name="itemid" ColumnName="itemid" />
+                <ScalarProperty Name="listid" ColumnName="listid" />
+                <ScalarProperty Name="updatedon" ColumnName="updatedon" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="listTables">
+            <EntityTypeMapping TypeName="TodolistModel.listTable">
+              <MappingFragment StoreEntitySet="listTable">
+                <ScalarProperty Name="listid" ColumnName="listid" />
+                <ScalarProperty Name="listtitle" ColumnName="listtitle" />
+                <ScalarProperty Name="completed" ColumnName="completed" />
+                <ScalarProperty Name="updatedon" ColumnName="updatedon" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tagsTables">
+            <EntityTypeMapping TypeName="TodolistModel.tagsTable">
+              <MappingFragment StoreEntitySet="tagsTable">
+                <ScalarProperty Name="tagid" ColumnName="tagid" />
+                <ScalarProperty Name="tagname" ColumnName="tagname" />
+                <ScalarProperty Name="updatedon" ColumnName="updatedon" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="TagListConnection" TypeName="TodolistModel.TagListConnection" StoreEntitySet="TagListConnection">
+            <EndProperty Name="listTable">
+              <ScalarProperty Name="listid" ColumnName="listid" />
+            </EndProperty>
+            <EndProperty Name="tagsTable">
+              <ScalarProperty Name="tagid" ColumnName="tagid" />
+            </EndProperty>
+          </AssociationSetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
