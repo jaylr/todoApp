@@ -11,12 +11,14 @@ namespace webapi
 {
     using System;
     using System.Collections.Generic;
+    using System.Runtime.Serialization;
     
     public partial class listItem
     {
         public int itemid { get; set; }
         public int listid { get; set; }
         public Nullable<System.DateTime> updatedon { get; set; }
+        public string Itemname { get; set; }
     
         public virtual listTable listTable { get; set; }
     }
